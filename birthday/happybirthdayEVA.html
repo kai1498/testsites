@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eva's Birthday!</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{
+  height:100%;
+  overflow:hidden;
+  font-family:'Comic Sans MS', cursive;
+}
+
+/* NIGHT SCENE CONTAINER */
+.scene {
+  width:100%;
+  height:100%;
+  background:linear-gradient(180deg,#96CBFA,#2d145f);
+  background-size:cover;
+  background-repeat:repeat-x;
+  animation: cityScroll 25s linear infinite, cameraPan 10s ease-in-out infinite alternate;
+  position:relative;
+  transform-origin:center;
+  filter:brightness(0.95);
+}
+
+@keyframes cityScroll{
+  0%{background-position:0 0;}
+  100%{background-position:-2600px 0;}
+}
+
+@keyframes cameraPan{
+  0%{ transform:translateX(0) scale(1); }
+  50%{ transform:translateX(-40px) scale(1.06); }
+  100%{ transform:translateX(0) scale(1.03);}
+}
+
+/* TWINKLE STARS */
+.star{
+  position:absolute;
+  width:3px;
+  height:3px;
+  background:white;
+  border-radius:50%;
+  opacity:0.7;
+  animation: twinkle 2s infinite ease-in-out;
+}
+@keyframes twinkle{
+  0%{opacity:0.2;transform:scale(0.7);}
+  50%{opacity:1;transform:scale(1);}
+  100%{opacity:0.2;transform:scale(0.7);}
+}
+
+/* TITLE */
+h1{
+  position:absolute;
+  top:8%;
+  width:100%;
+  text-align:center;
+  color:white;
+  font-size:3em;
+  text-shadow:0 0 25px #ff6bd8;
+  animation: glow 2s infinite alternate;
+  z-index:30;
+}
+@keyframes glow{
+  from{opacity:0.7;}
+  to{opacity:1;}
+}
+
+h2{
+  position:absolute;
+  top:17%;
+  width:100%;
+  text-align:center;
+  color:#ffeeff;
+  font-size:1.7em;
+  z-index:30;
+}
+
+/* CHARACTERS WALKING */
+.character{
+  position:absolute;
+  bottom:10%;
+  width:170px;
+  animation: walkAcross 11s linear infinite;
+  filter: drop-shadow(0 0 8px white);
+  z-index:20;
+}
+.character:nth-child(3){ animation-delay:0s; left:-200px;}
+.character:nth-child(4){ animation-delay:3s; left:-250px;}
+.character:nth-child(5){ animation-delay:6s; left:-220px;}
+
+@keyframes walkAcross{
+  0%{ transform:translateX(-200px) translateY(0) scale(1); }
+  25%{ transform:translateX(30vw) translateY(-10px) scale(1.05); }
+  50%{ transform:translateX(60vw) translateY(0) scale(1.1); }
+  75%{ transform:translateX(90vw) translateY(-10px) scale(1.05);}
+  100%{ transform:translateX(120vw) translateY(0) scale(1); }
+}
+
+/* SPARKLE TRAIL */
+.sparkle{
+  position:absolute;
+  width:6px;
+  height:6px;
+  background:white;
+  border-radius:50%;
+  box-shadow:0 0 10px white;
+  animation: sparkleLife 1s linear forwards;
+  pointer-events:none;
+  z-index:10;
+}
+@keyframes sparkleLife{
+  0%{opacity:1;transform:scale(1);}
+  100%{opacity:0;transform:scale(0);}
+}
+
+/* DIALOGUE BUBBLES */
+.bubble{
+  position:absolute;
+  background:white;
+  color:#ff4fa7;
+  padding:10px 18px;
+  border-radius:20px;
+  box-shadow:0 0 10px white;
+  font-size:1.1em;
+  opacity:0;
+  animation: bubbleFloat 4s ease-in-out forwards;
+  pointer-events:none;
+  white-space:nowrap;
+  z-index:40;
+}
+@keyframes bubbleFloat{
+  0%{ opacity:0; transform:translateY(20px) scale(0.8); }
+  20%{ opacity:1; transform:translateY(0) scale(1); }
+  80%{ opacity:1; }
+  100%{ opacity:0; transform:translateY(-20px) scale(0.9);}
+}
+
+/* FIREWORKS CANVAS */
+#fireworksCanvas{
+  position:absolute;
+  top:0;
+  left:0;
+  z-index:50;
+  pointer-events:none;
+}
+
+/* CONFETTI */
+#confettiCanvas{
+  position:absolute;
+  top:0;
+  left:0;
+  z-index:35;
+  pointer-events:none;
+}
+
+/* FINAL I LOVE YOU CINEMATIC */
+#finalLove{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:black;
+  opacity:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:3em;
+  color:white;
+  text-shadow:0 0 25px pink;
+  z-index:100;
+  pointer-events:none;
+}
+</style>
+</head>
+
+<body>
+<div class="scene">
+
+<h1>🎉 Happy Birthday, Eva! 🎉</h1>
+<h2>I hope today brings you all the happiness and love you deserve. Have an unforgettable birthday! 💖</h2>
+
+<!-- CHARACTERS -->
+<img src="memory.jpg" class="character">
+<img src="memory2.jpg" class="character">
+<img src="memory3.jpg" class="character">
+
+<div id="stars"></div>
+<div id="sparkles"></div>
+<div id="bubbles"></div>
+<canvas id="confettiCanvas"></canvas>
+<canvas id="fireworksCanvas"></canvas>
+
+<div id="finalLove">You are not too much, you are enough 💗</div>
+
+</div>
+
+<script>
+/* STARS */
+const starContainer=document.getElementById("stars");
+for(let i=0;i<150;i++){
+  const s=document.createElement("div");
+  s.classList.add("star");
+  s.style.left=Math.random()*100+"vw";
+  s.style.top=Math.random()*60+"vh";
+  s.style.animationDuration=(1+Math.random()*2)+"s";
+  starContainer.appendChild(s);
+}
+
+/* SPARKLES */
+const chars=document.querySelectorAll(".character");
+const sparkleContainer=document.getElementById("sparkles");
+setInterval(()=>{
+  chars.forEach(char=>{
+    const r=char.getBoundingClientRect();
+    const sp=document.createElement("div");
+    sp.classList.add("sparkle");
+    sp.style.left=r.left+(char.width/2)+"px";
+    sp.style.top=r.top+(char.height/1.3)+"px";
+    sparkleContainer.appendChild(sp);
+    setTimeout(()=>sp.remove(),900);
+  });
+},120);
+
+/* BUBBLES */
+const bubbleContainer=document.getElementById("bubbles");
+const messages=[
+  "I'm glad you made it through the hard times ✨",
+  "I hope your day is as beautiful as you are 💖",
+  "You're doing just fine 💞",
+  "Look how far you've come. I'm so proud of you 💗"
+];
+function spawnBubble(){
+  const char=chars[Math.floor(Math.random()*chars.length)];
+  const r=char.getBoundingClientRect();
+  const b=document.createElement("div");
+  b.classList.add("bubble");
+  b.innerText=messages[Math.floor(Math.random()*messages.length)];
+  b.style.left=r.left+"px";
+  b.style.top=(r.top-60)+"px";
+  bubbleContainer.appendChild(b);
+  setTimeout(()=>b.remove(),4000);
+}
+setInterval(spawnBubble,1400);
+
+/* CONFETTI ON CLICK */
+const confettiCanvas=document.getElementById("confettiCanvas");
+const cctx=confettiCanvas.getContext("2d");
+confettiCanvas.width=innerWidth;
+confettiCanvas.height=innerHeight;
+let confetti=[];
+function Confetto(){
+  this.x=Math.random()*confettiCanvas.width;
+  this.y=-10;
+  this.size=Math.random()*8+3;
+  this.speed=Math.random()*4+2;
+  this.color=`hsl(${Math.random()*360},100%,60%)`;
+}
+Confetto.prototype.update=function(){
+  this.y+=this.speed;
+  if(this.y>confettiCanvas.height)this.y=-10;
+};
+Confetto.prototype.draw=function(){
+  cctx.fillStyle=this.color;
+  cctx.fillRect(this.x,this.y,this.size,this.size);
+};
+function shootConfetti(){
+  confetti=[];
+  for(let i=0;i<220;i++) confetti.push(new Confetto());
+}
+function confettiLoop(){
+  cctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+  confetti.forEach(c=>{c.update();c.draw();});
+  requestAnimationFrame(confettiLoop);
+}
+confettiLoop();
+document.body.addEventListener("click",shootConfetti);
+
+/* FIREWORKS FINALE */
+const fwCanvas=document.getElementById("fireworksCanvas");
+const fctx=fwCanvas.getContext("2d");
+fwCanvas.width=innerWidth;
+fwCanvas.height=innerHeight;
+let fireworks=[];
+function firework(){
+  const particles=[];
+  const x=Math.random()*fwCanvas.width;
+  const y=Math.random()*fwCanvas.height*0.5+100;
+  for(let i=0;i<40;i++){
+    particles.push({
+      x,y,
+      angle:Math.random()*Math.PI*2,
+      speed:Math.random()*4+2,
+      size:Math.random()*3+1,
+      color:`hsl(${Math.random()*360},100%,60%)`,
+      life:60
+    });
+  }
+  fireworks.push(particles);
+}
+function fireworksLoop(){
+  fctx.clearRect(0,0,fwCanvas.width,fwCanvas.height);
+  fireworks.forEach((group,gi)=>{
+    group.forEach(p=>{
+      p.x+=Math.cos(p.angle)*p.speed;
+      p.y+=Math.sin(p.angle)*p.speed;
+      p.life--;
+      fctx.fillStyle=p.color;
+      fctx.fillRect(p.x,p.y,p.size,p.size);
+    });
+    fireworks[gi]=group.filter(p=>p.life>0);
+  });
+  fireworks=fireworks.filter(g=>g.length);
+  requestAnimationFrame(fireworksLoop);
+}
+fireworksLoop();
+
+/* TRIGGER FIREWORKS AFTER 6 SECONDS */
+setTimeout(()=>{
+  setInterval(firework,700);
+},6000);
+
+/* FINAL CINEMATIC LOVE FADE */
+const final=document.getElementById("finalLove");
+setTimeout(()=>{
+  final.style.transition="3s ease-in-out";
+  final.style.opacity=1;
+},12000);
+
+addEventListener("resize",()=>{
+  confettiCanvas.width=innerWidth;
+  confettiCanvas.height=innerHeight;
+  fwCanvas.width=innerWidth;
+  fwCanvas.height=innerHeight;
+});
+</script>
+
+</body>
+</html>
